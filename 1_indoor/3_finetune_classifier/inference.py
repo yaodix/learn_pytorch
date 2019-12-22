@@ -10,6 +10,15 @@ import matplotlib.pyplot as plt
 import cv2
 import shutil
 import  os
+from sklearn.metrics import confusion_matrix
+import seaborn as sns
+sns.set()
+
+def conf_mat(y_true,y_pred,labels):
+    c = confusion_matrix(y_true,y_pred,labels)
+    sns.heatmap(c,annot=True,fmt='d', cmap="YlGnBu",xticklabels=classes,yticklabels=classes)
+    plt.show()
+
 def imshow(inp, title=None):
     """Imshow for Tensor."""
     inp = inp.numpy().transpose((1, 2, 0))
@@ -37,7 +46,7 @@ def normImg2raw(inp):
 classes =['ant','bee']
 device = torch.device('cuda:0')
 test_path = 'C:\\pythonProjects\\learn_pytorch\\1_indoor\\3_finetune_classifier\\val.csv'
-Path = 'C:\\pythonProjects\\learn_pytorch\\1_indoor\\3_finetune_classifier\\model_weights\\epoch_0_0.9539.pt'
+Path = 'C:\\pythonProjects\\learn_pytorch\\1_indoor\\3_finetune_classifier\\model_weights\\epoch_20_0.9671.pt'
 save_res = 'C:\\MyData\\hymenoptera_data\\wrong\\'
 
 test_trans = transforms.Compose([transforms.Resize(256),
@@ -58,6 +67,8 @@ model_ft.load_state_dict(torch.load(Path))
 model_ft.to(device)
 model_ft.eval()          # key point
 
+y_true =[]
+y_pred = []
 with torch.no_grad():   # key point
     for i,data in enumerate(testdataloader,0):
         inputs,labels,paths =data
@@ -67,20 +78,26 @@ with torch.no_grad():   # key point
         probs = outputs.softmax(1)
 
         prob,preds = torch.max(probs,1)
+        y_pred.extend(preds.cpu().tolist())
+        y_true.extend(labels.cpu().tolist())
 
         res = (preds == labels)
-        for j,value in enumerate(res,0) :
-            if value.item() is False:
-                img = inputs[j].cpu()
-                save_img = normImg2raw(img)
-                cv2.imshow('win',save_img)
+        if False :
+            for j,value in enumerate(res,0) :
+                if value.item() is False:
+                    img = inputs[j].cpu()
+                    save_img = normImg2raw(img)
+                    cv2.imshow('win',save_img)
 
-                print(paths[j],',pred:',classes[preds[j]],',prob:',prob.cpu()[j].item())
-                _,name = os.path.split(paths[j])
-                shutil.copy(paths[j],save_res+name)
-                cv2.waitKey()
+                    print(paths[j],',pred:',classes[preds[j]],',prob:',prob.cpu()[j].item())
+                    _,name = os.path.split(paths[j])
+                    shutil.copy(paths[j],save_res+name)
+                    cv2.waitKey()
 
-
+trues = np.where(np.array(y_true) == 0, 'ant','bee')
+preds = np.where(np.array(y_pred) == 0, 'ant','bee')
+conf_mat(y_pred=preds,y_true=trues,labels=classes)
+pass
 
 
 
