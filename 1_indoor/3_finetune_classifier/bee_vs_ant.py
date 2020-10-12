@@ -7,14 +7,15 @@ from torchvision.transforms import transforms
 import torchvision.models  as models
 import time
 import torch.optim
-from torch.utils.tensorboard import  SummaryWriter
+# from torch.utils.tensorboard import  SummaryWriter
 
 classes =['ant','bee']
 train_path = 'C:\\pythonProjects\\learn_pytorch\\1_indoor\\3_finetune_classifier\\train.csv'
 test_path = 'C:\\pythonProjects\\learn_pytorch\\1_indoor\\3_finetune_classifier\\val.csv'
 
 
-train_trans = transforms.Compose([transforms.RandomCrop(224),
+train_trans = transforms.Compose([
+                            transforms.RandomCrop(224),
                            transforms.RandomHorizontalFlip(),
                            transforms.ToTensor(),
                            transforms.Normalize([0.485,0.456,0.460],[0.229,0.224,0.225])
@@ -34,7 +35,7 @@ testdataloader = DataLoader(testset,batch_size=4,shuffle=True,num_workers=0)
 def train_model(model,criterion,optim,scheduler,num_epochs=25):
     since = time.time()
     best_val_acc= 0
-    writer = SummaryWriter('logs/')
+    # writer = SummaryWriter('logs/')
     for epoch in range(num_epochs):
         print('epoch {}/{}'.format(epoch,num_epochs-1))
         #train
@@ -77,20 +78,20 @@ def train_model(model,criterion,optim,scheduler,num_epochs=25):
 
         val_loss =testing_loss/testset.__len__()
         val_acc = testing_corrects.double()/testset.__len__()
-        writer.add_scalars('epoch/loss',{'train':epoch_loss,'valid':val_loss},epoch)
-        writer.add_scalars('epoch/acc',{'train':epoch_acc,'valid':val_acc},epoch)
+        # writer.add_scalars('epoch/loss',{'train':epoch_loss,'valid':val_loss},epoch)
+        # writer.add_scalars('epoch/acc',{'train':epoch_acc,'valid':val_acc},epoch)
 
         #记录权值分布
-        for name,layer in model.named_parameters():
-            writer.add_histogram(name+'_grad',layer.grad.cpu().data.numpy(),epoch)
-            writer.add_histogram(name+'_data',layer.cpu().data.numpy(),epoch)
+        # for name,layer in model.named_parameters():
+        #     writer.add_histogram(name+'_grad',layer.grad.cpu().data.numpy(),epoch)
+        #     writer.add_histogram(name+'_data',layer.cpu().data.numpy(),epoch)
         print('{} Loss: {:.4f} Acc: {:.4f}'.format( 'val', val_loss, val_acc))
         if val_acc > best_val_acc:
             best_val_acc = val_acc
         Path = 'model_weights/epoch_{}_{:.4f}.pt'.format(epoch,val_acc)
         # torch.save(model.state_dict(),Path)
     print('best_val_acc:{}',best_val_acc)
-    writer.close()
+    # writer.close()
 model_ft  =models.resnet18(pretrained=True)
 num_ftrs = model_ft.fc.in_features
 model_ft.fc = torch.nn.Linear(num_ftrs,2)
