@@ -20,10 +20,10 @@ def cv2_loader(img_path):
     # img = img.transpose((2,0,1))
     return  img
 
-class CSVDataLoader(Dataset):
-    def __init__(self,file_path,transform = None):
+class CsvDataset(Dataset):
+    def __init__(self,file_path, transform = None):
         self.file_path = file_path
-        self.data_info = pd.read_csv(self.file_path,header=None)
+        self.data_info = pd.read_csv(self.file_path, header=None)
         # 文件第一列包含图像文件的名称
         self.image_arr = np.asarray(self.data_info.iloc[:, 0])
         # 第二列是图像的 label
@@ -37,7 +37,7 @@ class CSVDataLoader(Dataset):
         return self.data_len
 
     def __getitem__(self, idx):
-        if torch.is_tensor(idx):  #转换为numpyk可用的list
+        if torch.is_tensor(idx):  #转换为numpy可用的list
             idx = idx.tolist()
         img_path = self.image_arr[idx]
         label = self.label_arr[idx]

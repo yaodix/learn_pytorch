@@ -21,6 +21,7 @@ plt.plot(x,y,'*r')
 x_train = torch.from_numpy(x).float()
 y_train = torch.from_numpy(y).float()
 #print('x_train type ={} '.format(x_train.dtype))
+
 _w = torch.randn(2,requires_grad=True)
 _b = torch.randn(1,requires_grad= True)
 #print('_w type ={} '.format(_w.dtype))

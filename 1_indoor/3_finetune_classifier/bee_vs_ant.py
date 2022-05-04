@@ -2,7 +2,7 @@ import torchvision
 import torch
 from torch.utils.data import DataLoader
 # from sklearn.metrics import classification_report
-from csv_data_loader import CSVDataLoader
+from csv_data_loader import CsvDataset
 from torchvision.transforms import transforms
 import torchvision.models  as models
 import time
@@ -10,12 +10,12 @@ import torch.optim
 # from torch.utils.tensorboard import  SummaryWriter
 
 classes =['ant','bee']
-train_path = 'C:\\pythonProjects\\learn_pytorch\\1_indoor\\3_finetune_classifier\\train.csv'
-test_path = 'C:\\pythonProjects\\learn_pytorch\\1_indoor\\3_finetune_classifier\\val.csv'
+train_path = '/home/yao/workspace/learn_pytorch/train.csv'
+test_path = '/home/yao/workspace/learn_pytorch/val.csv'
 
 
 train_trans = transforms.Compose([
-                            transforms.RandomCrop(224),
+                            transforms.RandomResizedCrop(224),
                            transforms.RandomHorizontalFlip(),
                            transforms.ToTensor(),
                            transforms.Normalize([0.485,0.456,0.460],[0.229,0.224,0.225])
@@ -25,8 +25,8 @@ test_trans = transforms.Compose([transforms.Resize(256),
                            transforms.ToTensor(),
                            transforms.Normalize([0.485,0.456,0.460],[0.229,0.224,0.225])
                            ])
-trainset = CSVDataLoader(train_path,transform=train_trans)
-testset = CSVDataLoader(test_path,transform=test_trans)
+trainset = CsvDataset(train_path,transform=train_trans)
+testset = CsvDataset(test_path,transform=test_trans)
 device = torch.device("cuda:0")
 
 traindataloader = DataLoader(trainset,batch_size=32,shuffle=True,num_workers=0)
@@ -39,7 +39,7 @@ def train_model(model,criterion,optim,scheduler,num_epochs=25):
     for epoch in range(num_epochs):
         print('epoch {}/{}'.format(epoch,num_epochs-1))
         #train
-        model.train()   #启用 BatchNormalization 和 Dropout
+        model.train()   # Set model to training mode
         running_loss = 0
         running_corrects = 0
         for i,data in enumerate(traindataloader,0):
@@ -92,14 +92,15 @@ def train_model(model,criterion,optim,scheduler,num_epochs=25):
         # torch.save(model.state_dict(),Path)
     print('best_val_acc:{}',best_val_acc)
     # writer.close()
+
 model_ft  =models.resnet18(pretrained=True)
 num_ftrs = model_ft.fc.in_features
-model_ft.fc = torch.nn.Linear(num_ftrs,2)
+model_ft.fc = torch.nn.Linear(num_ftrs, 2)
 model_ft = model_ft.to(device)
 
 criterion = torch.nn.CrossEntropyLoss()
 optimizer_ft = torch.optim.SGD(model_ft.fc.parameters(),lr=0.001,momentum=0.9)  #  训练参数
-exp_lr_schedules = torch.optim.lr_scheduler.StepLR(optimizer_ft,step_size=7,gamma=0.5)
+exp_lr_schedules = torch.optim.lr_scheduler.StepLR(optimizer_ft,step_size=7,gamma=0.1)
 
 model_ft = train_model(model_ft,criterion,optimizer_ft,exp_lr_schedules,25)
 
