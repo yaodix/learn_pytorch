@@ -1,4 +1,4 @@
-#逻辑回归实现二分类
+# 逻辑回归实现二分类
 
 import torch
 import torch.nn as nn
@@ -10,6 +10,9 @@ def logistic(x):
     return torch.sigmoid((torch.mm(x,_w)+_b))   #此处‘x'的表达方式
 
 def loss_logistic(y_train,_y):
+    '''
+    二元交叉熵损失函数
+    '''
     return -(y_train*torch.log(torch.clamp(_y,1e-6))+(1-y_train)*torch.log(torch.clamp(1-_y,1e-6))).sum() #clamp运算
 
 

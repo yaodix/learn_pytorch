@@ -10,6 +10,7 @@ def linear_func(x):
 def loss_func(y_train,_y):
     return torch.mean((y_train-_y)**2)
 plt.ion()   #打开交互模式
+
 #y = 2.5x+4.2
 w = 2.5
 b = 4.2
