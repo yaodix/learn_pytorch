@@ -78,6 +78,7 @@ def train(args):
     if args.weights != "":
         assert os.path.exists(args.weights), "weights file: '{}' not exist.".format(args.weights)
         weights_dict = torch.load(args.weights, map_location=device)
+        
         # 删除不需要的权重
         del_keys = ['head.weight', 'head.bias'] if model.has_logits \
             else ['pre_logits.fc.weight', 'pre_logits.fc.bias', 'head.weight', 'head.bias']
@@ -139,7 +140,7 @@ if __name__ == '__main__':
     parser.add_argument('--representation_size', type=int, default=None, help="重新表征大小")
     parser.add_argument('--drop_ratio', type=float, default=0., help="除attention层外其余层的丢弃概率")
     parser.add_argument('--attn_drop_ratio', type=float, default=0., help="attention层中的丢弃概率")
-    parser.add_argument('--epochs', type=int, default=10, help="训练批次")
+    parser.add_argument('--epochs', type=int, default=20, help="训练批次")
     parser.add_argument('--batch-size', type=int, default=32)
     parser.add_argument('--lr', type=float, default=0.001)
     parser.add_argument('--lrf', type=float, default=0.01)
