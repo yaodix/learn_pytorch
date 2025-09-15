@@ -110,3 +110,4 @@ test.py
 # weights不能在git上上传
 1_indoor/2_cifar10_classifier/weights
 weights
+model
