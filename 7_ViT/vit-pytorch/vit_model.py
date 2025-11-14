@@ -118,7 +118,7 @@ class Attention(nn.Module):
 
         # transpose: -> [batch_size, num_heads, embed_dim_per_head, num_patches + 1]
         # @: 矩阵乘法 -> [batch_size, num_heads, num_patches + 1, num_patches + 1]
-        attn = (q @ k.transpose(-2, -1)) * self.scale
+        attn = (q @ k.transpose(-2, -1)) * self.scale  # @是矩阵乘法
         attn = attn.softmax(dim=-1)
         attn = self.attn_drop(attn)
 
@@ -199,6 +199,7 @@ class VisionTransformer(nn.Module):
         self.embed_dim = embed_dim
         self.num_features = embed_dim
         self.num_tokens = 1 # 需要多添加的一个类别token
+        # partial:现在 norm_layer 是一个新函数，调用时只需要传 normalized_shape
         norm_layer = partial(nn.LayerNorm, eps=1e-6) # 若无特殊正则化层，则会选择nn.LayerNorm
         act_layer = nn.GELU # 若未传入激活层则用nn.GELU
 
@@ -221,13 +222,13 @@ class VisionTransformer(nn.Module):
         ])
 
         self.norm = norm_layer(embed_dim)
-        # 预表征层
+        # 预表征层，进行特征变换
         if representation_size:
             self.has_logits = True
             self.num_features = representation_size
             self.pre_logits = nn.Sequential(OrderedDict([
                 ("fc", nn.Linear(embed_dim, representation_size)),
-                ("act", nn.Tanh())
+                ("act", nn.Tanh())  # [-1, 1]以0为中心有界输出，有特征归一化效果
             ]))
         else:
             self.has_logits = False
@@ -247,7 +248,7 @@ class VisionTransformer(nn.Module):
         cls_token = self.cls_token.expand(x.shape[0], -1, -1) # [1, 1, 768] -> [B, 1, 768]
         x = torch.cat((cls_token, x), dim=1)  # [B, 197, 768]
 
-        x = self.pos_drop(x + self.pos_embed)
+        x = self.pos_drop(x + self.pos_embed)  # pos_embed是位置编码，训练中一起优化
         x = self.blocks(x)
         x = self.norm(x)
         x = self.pre_logits(x[:, 0])
