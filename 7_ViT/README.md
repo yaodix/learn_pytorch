@@ -1,3 +1,16 @@
+# vit summary
+
+To summarize, in Vision transformer, images are reorganized as 2D grids of patches(treating them as tokens). The models are trained on those patches.
+
+### CNN和ViT区别
+
+CNN有两个重要假设
+
+* 特征平移不变性
+* 局部性：图像中的像素主要与其周围的像素相互作用以形成特征。
+
+CNN models are very good at these two biases. ViT do not have this assumption
+
 # vit-pytorch
 
  使用pytorch复现vit模型（图像分类）https://github.com/yxhuang7538/vit-pytorch?tab=readme-ov-file
@@ -28,7 +41,6 @@
 
 测试图片
 
-![测试图片](./test_result.png)
 
 ## Swim tranformer
 
