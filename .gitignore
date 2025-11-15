@@ -111,3 +111,4 @@ test.py
 1_indoor/2_cifar10_classifier/weights
 weights
 model
+vit-base-beans
