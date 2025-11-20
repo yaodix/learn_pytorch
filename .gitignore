@@ -112,3 +112,5 @@ test.py
 weights
 model
 vit-base-beans
+detr-resnet-50-hardhat-finetuned
+wandb

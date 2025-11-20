@@ -1,3 +1,5 @@
+# show model structure
+
 import torch
 from torch import nn
 from torchvision.models import resnet50
@@ -27,7 +29,7 @@ class DETR(nn.Module):
         x = self.backbone(inputs)    # [1,3,800,1066] -> [1,2048,25,34]
         h = self.conv(x)             # [1,2048,25,34] -> [1,256,25,34]
         H, W = h.shape[-2:]          # H=25  W=34
-        # pos = [850,1,256]  self.col_embed = [50,128]  self.row_embed[:H]=[50,128]
+        # pos = [850,1,256]  self.col_embed = [50,128]  self.row_embed[:H]=[50,128], 这里用的2D queries
         pos = torch.cat([self.col_embed[:W].unsqueeze(0).repeat(H, 1, 1),
                         self.row_embed[:H].unsqueeze(1).repeat(1, W, 1),
                         ], dim=-1).flatten(0, 1).unsqueeze(1)

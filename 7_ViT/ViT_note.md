@@ -25,7 +25,6 @@ CNN models are very good at these two biases. ViT do not have this assumption
 
 代码细节
 
-
 cls_token如何实现分类计算？
 
 One typically places a linear layer on top of the [CLS] token, as the last hidden state of this token can be seen as a representation of an entire image.
@@ -37,6 +36,9 @@ One typically places a linear layer on top of the [CLS] token, as the last hidde
 其中，`x[:, 0]`是提取图像全局表示的核心操作。
 
 vit中好像并没有看到位置信息
+
+### SwinTransformer
+
 
 ### Vit应用
 

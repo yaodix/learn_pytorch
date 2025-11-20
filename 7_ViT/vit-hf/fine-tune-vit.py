@@ -72,6 +72,7 @@ training_args = TrainingArguments(
 
 if __name__ == '__main__':
   ds = load_dataset('beans')
+  show_examples(ds)
   prepared_ds = ds.with_transform(transform)
 
   model_name_or_path = 'google/vit-base-patch16-224-in21k'
@@ -84,6 +85,7 @@ if __name__ == '__main__':
     id2label={str(i): c for i, c in enumerate(labels)},
     label2id={c: str(i) for i, c in enumerate(labels)}
   )
+  # 如何控制特定训练层
   trainer = Trainer(
     model=model,
     args=training_args,
