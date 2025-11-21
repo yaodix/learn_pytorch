@@ -114,3 +114,5 @@ model
 vit-base-beans
 detr-resnet-50-hardhat-finetuned
 wandb
+clip.index
+*.jpg
