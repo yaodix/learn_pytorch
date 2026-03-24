@@ -105,6 +105,7 @@ venv.bak/
 
 1_indoor/2_cifar10_classifier/data
 data
+!10_LLM/prompt/data/
 runs
 test.py
 # weights不能在git上上传
