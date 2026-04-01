@@ -172,11 +172,18 @@ def run_coding_agent_loop():
             "role": "user",
             "content": user_input.strip()
         })
+        loop_cnt = 0
         while True:
+            print(f"--- Loop iteration {loop_cnt} ---")
+            print(f"Conversation so far: {conversation}")
             assistant_response = execute_llm_call(conversation)
+            print(f"{ASSISTANT_COLOR}Raw assistant response:{RESET_COLOR} {assistant_response}")
+            print("*" * 20)
             tool_invocations = extract_tool_invocations(assistant_response)
+            print(f"Extracted tool invocations: {tool_invocations}")
+            loop_cnt += 1
             if not tool_invocations:
-                print(f"{ASSISTANT_COLOR}Assistant:{RESET_COLOR}: {assistant_response}")
+                # print(f"{ASSISTANT_COLOR}Assistant:{RESET_COLOR}: {assistant_response}")
                 conversation.append({
                     "role": "assistant",
                     "content": assistant_response
@@ -184,7 +191,6 @@ def run_coding_agent_loop():
                 break
             for name, args in tool_invocations:
                 tool = TOOL_REGISTRY.get(name)
-                print(name, args)
                 try:
                     if tool is None:
                         resp = {"error": f"Unknown tool: {name}"}
@@ -202,7 +208,7 @@ def run_coding_agent_loop():
                     "role": "user",
                     "content": f"tool_result({json.dumps(resp)})"
                 })
-                
+                print(f"Tool result: {resp}")
 
 if __name__ == "__main__":    
     run_coding_agent_loop()
