@@ -16,4 +16,9 @@ response = client.chat.completions.create(
     stream=False
 )
 
+print(response)
+
+print(response.choices)
+
+# choices is a list of possible completions, we take the first one and print its content
 print(response.choices[0].message.content)

@@ -35,7 +35,7 @@ def resolve_abs_path(path_str: str) -> Path:
     """
     file.py -> /Users/home/mihail/modern-software-dev-lectures/file.py
     """
-    path = Path(path_str).expanduser()
+    path = Path(path_str).expanduser()  # 
     if not path.is_absolute():
         path = (Path.cwd() / path).resolve()
     return path
@@ -142,6 +142,8 @@ def extract_tool_invocations(text: str) -> List[Tuple[str, Dict[str, Any]]]:
                 continue
             json_str = rest[:-1].strip()
             args = json.loads(json_str)
+            if not isinstance(args, dict):
+                continue
             invocations.append((name, args))
         except Exception:
             continue
@@ -153,8 +155,6 @@ def execute_llm_call(conversation: List[Dict[str, str]]):
         messages=conversation,
         max_completion_tokens=2000
         )
-
-
     return response.choices[0].message.content
 
 def run_coding_agent_loop():
@@ -183,22 +183,26 @@ def run_coding_agent_loop():
                 })
                 break
             for name, args in tool_invocations:
-                tool = TOOL_REGISTRY[name]
-                resp = ""
+                tool = TOOL_REGISTRY.get(name)
                 print(name, args)
-                if name == "read_file":
-                    resp = tool(args.get("filename", "."))
-                elif name == "list_files":
-                    resp = tool(args.get("path", "."))
-                elif name == "edit_file":
-                    resp = tool(args.get("path", "."), 
-                                args.get("old_str", ""), 
-                                args.get("new_str", ""))
+                try:
+                    if tool is None:
+                        resp = {"error": f"Unknown tool: {name}"}
+                    elif name == "read_file":
+                        resp = tool(args.get("filename", "."))
+                    elif name == "list_files":
+                        resp = tool(args.get("path", "."))
+                    elif name == "edit_file":
+                        resp = tool(args.get("path", "."),
+                                    args.get("old_str", ""),
+                                    args.get("new_str", ""))
+                except Exception as e:
+                    resp = {"error": str(e)}
                 conversation.append({
                     "role": "user",
                     "content": f"tool_result({json.dumps(resp)})"
                 })
                 
 
-if __name__ == "__main__":
+if __name__ == "__main__":    
     run_coding_agent_loop()
