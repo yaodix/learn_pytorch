@@ -117,3 +117,4 @@ detr-resnet-50-hardhat-finetuned
 wandb
 clip.index
 *.jpg
+!10_LLM/CS146S_vibecoding/week2/coding_agent_run.log
