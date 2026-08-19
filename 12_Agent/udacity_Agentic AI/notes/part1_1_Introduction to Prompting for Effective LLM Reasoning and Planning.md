@@ -4,10 +4,9 @@
 
 This learning journey is focused on how advanced prompting techniques enable AI applications to become AI agents.
 
-
 ## L2_The Role of Prompting in Agentic AI with Python and OpenAI
 
-**Components of an AI Agent AI** 
+**Components of an AI Agent AI**
 
 The foundation of a modern AI agent typically involves several key components:一个现代AI智能体的基础通常包含几个关键组成部分：
 
@@ -21,7 +20,15 @@ The foundation of a modern AI agent typically involves several key components:�
 5. **Runtime/Orchestration Layer:** This environment allows the agent or LLM to control its execution flow, decide when to use tools, and process observations. In fact, the orchestration layer is what actually runs the tools on the LLM's behalf, since by itself it only generates text.
    运行时/编排层：该环境允许智能体或大语言模型（LLM）控制其执行流程、决定何时使用工具并处理观测结果。实际上，编排层才是代表大语言模型实际运行工具的组件，因为大语言模型本身仅能生成文本。
 
-   
-   
-**What is Prompting?**   
+**What is Prompting?**
 **A prompt is a set of instructions provided to an LLM that customizes, enhances, or refines its capabilities** .
+
+
+ we explored how different prompt refinements affect the output of an LLM:
+
+1. **Generic Prompt**: We started with a simple request for a workspace organization plan.
+2. **Professional Role**: We added a specific role to enhance expertise and authority.
+3. **Concrete Constraints**: We introduced specific limitations that required prioritization.
+4. **Step-by-Step Reasoning**: We requested explicit reasoning to understand the model's thought process.
+
+These techniques demonstrate how prompt engineering can significantly improve the usefulness and relevance of AI-generated content for specific needs.
