@@ -22,13 +22,3 @@ The foundation of a modern AI agent typically involves several key components:ä¸
 
 **What is Prompting?**
 **A prompt is a set of instructions provided to an LLM that customizes, enhances, or refines its capabilities** .
-
-
- we explored how different prompt refinements affect the output of an LLM:
-
-1. **Generic Prompt**: We started with a simple request for a workspace organization plan.
-2. **Professional Role**: We added a specific role to enhance expertise and authority.
-3. **Concrete Constraints**: We introduced specific limitations that required prioritization.
-4. **Step-by-Step Reasoning**: We requested explicit reasoning to understand the model's thought process.
-
-These techniques demonstrate how prompt engineering can significantly improve the usefulness and relevance of AI-generated content for specific needs.
