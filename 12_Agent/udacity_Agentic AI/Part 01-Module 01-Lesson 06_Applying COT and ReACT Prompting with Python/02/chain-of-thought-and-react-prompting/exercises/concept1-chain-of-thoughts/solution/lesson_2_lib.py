@@ -5,13 +5,11 @@ from openai import OpenAI
 from IPython.display import display, Markdown
 
 
-class OpenAIModels(str, Enum):
-    GPT_4O_MINI = "gpt-4o-mini"
-    GPT_41_MINI = "gpt-4.1-mini"
-    GPT_41_NANO = "gpt-4.1-nano"
+class DeepSeekModels(str, Enum):
+    DS_V4_FLASH = "deepseek-v4-flash"
+    DS_V4_PRO = "deepseek-v4-pro"
 
-
-MODEL = OpenAIModels.GPT_41_NANO
+MODEL = DeepSeekModels.DS_V4_FLASH
 
 
 def get_completion(messages=None, system_prompt=None, user_prompt=None, model=MODEL, client=None, temperature=0.7):
@@ -20,7 +18,7 @@ def get_completion(messages=None, system_prompt=None, user_prompt=None, model=MO
     Args:
         system_prompt: The system prompt
         user_prompt: The user prompt
-        model: The model to use (default is gpt-4.1-mini)
+        model: The model to use (default is ds-v4-flash)
     Returns:
         The completion text
     """
@@ -859,9 +857,8 @@ def get_competitor_pricing_data():
     return data
 
 
-def call_competitor_pricing_api(
-    product_name: str, date: datetime.date
-) -> Dict[str, Any]:
+def call_competitor_pricing_api(product_name: str, date: datetime.date
+        ) -> Dict[str, Any]:
     data = get_competitor_pricing_data()
     data_by_product_name_and_date = {
         (item["product"], item["date"]): item for item in data
